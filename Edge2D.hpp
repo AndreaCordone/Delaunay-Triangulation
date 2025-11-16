@@ -9,16 +9,16 @@ class Edge2D {
 
     public: 
 
-    constexpr Edge2D ( const Point2D &, const Point2D &); 
+     Edge2D ( const Point2D &, const Point2D &); 
 
-    constexpr bool operator == (const Edge2D &) const; 
+     bool operator == (const Edge2D &) const; 
 
-    constexpr bool operator < (const Edge2D &) const; 
+     bool operator < (const Edge2D &) const; 
 
     // Getter 
-    [[nondiscard]] constexpr Point2D p1 () const; 
+    [[nodiscard]]  Point2D p1 () const; 
 
-    [[nondiscrd]] constexpr Point2D p2 () const; 
+    [[nodiscard]]  Point2D p2 () const; 
 
 
     private: 
