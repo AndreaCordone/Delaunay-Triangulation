@@ -47,7 +47,10 @@ void Triangle::computeCircCenter(){
 
 bool Triangle::containedInCircumcircle ( const Point2D & p) const {
 
-    return mCircCenter.distance_to(p) < mCircRadious;  
+    double eps = 1e-12; 
+    double dist2 = mCircCenter.distance_to_squared(p); 
+    double rad2 = mCircRadious*mCircRadious; 
+    return dist2 <= rad2 + eps; 
 
 }
 

@@ -1,13 +1,22 @@
 #include "Point2D.hpp"
 
 // Compute distance from a point B
-[[nodiscard]] double Point2D::distance_to(const Point2D &B) const noexcept
+ double Point2D::distance_to(const Point2D &B) const noexcept
 {
     // Computing disctance from a give point B
     double dx = mx - B.xcord();
     double dy = my - B.ycord();
     return std::sqrt(dx * dx + dy * dy);
 };
+
+
+// double distance_to_squared
+double Point2D::distance_to_squared (const Point2D & B) const noexcept {
+    double dx = mx - B.xcord();
+    double dy = my - B.ycord();
+    return dx*dx + dy*dy; 
+} 
+
 
 // Comparison methods
 bool Point2D::operator==(const Point2D &B) const
@@ -30,13 +39,13 @@ bool Point2D::operator==(const Point2D &B) const
 }
 
 // Getter function for x coordinate
-[[nodiscard]]  double Point2D::xcord() const noexcept
+  double Point2D::xcord() const noexcept
 {
     return (mx);
 };
 
 // Getter function for y coordinate
-[[nodiscard]]  double Point2D::ycord() const noexcept
+  double Point2D::ycord() const noexcept
 {
     return (my);
 };
