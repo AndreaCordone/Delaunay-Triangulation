@@ -59,3 +59,28 @@ const std::vector<Edge2D> & Triangle::get_edges () const {
 
 
 }
+
+// check if a point is a vertex
+bool Triangle::has_vertex(const Point2D & V) const {
+
+    return mA == V || mB == V || mC == V; 
+
+}
+
+
+ // Getter for triangles vertices 
+    const Point2D & Triangle::V1 () const {
+        return mA; 
+    }
+    const Point2D & Triangle::V2 () const {
+        return mB; 
+    }
+    const Point2D & Triangle::V3 () const {
+        return mC; 
+    }
+
+
+    // compare operator 
+    bool Triangle::operator==(const Triangle& other) const {
+        return mA == other.mA && mB == other.mB && mC == other.mC;
+    }

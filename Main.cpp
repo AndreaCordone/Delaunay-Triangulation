@@ -3,7 +3,9 @@
 #include "Triangle.hpp"
 
 #include<map>
-
+#include <fstream>
+#include<cstdlib>
+#include<ctime>
 
 
 
@@ -22,16 +24,23 @@ int main () {
 
 // Find Max and Min of set of points
 // Assuming all the points are contained in a vector 
-std::vector<Point2D> points; 
 
-points.emplace_back(1.0, 2.0);
-points.emplace_back(3.5,-0.2);
-points.emplace_back(0.0, 0.0);
-points.emplace_back(6.4, -8.1);
-points.emplace_back(5.2,  7.7);
-points.emplace_back(-2.0, 9.9);
-points.emplace_back(7.8, -6.3);
-points.emplace_back(9.1, 4.5);
+std::vector<Point2D> points;
+int N = 5;
+double perturb = 0; // maximum displacement
+
+std::srand(std::time(0));
+for (int i = 0; i < N; ++i) {
+    for (int j = 0; j < N; ++j) {
+        double x = i / double(N-1) + perturb * ((std::rand() / double(RAND_MAX)) - 0.5);
+        double y = j / double(N-1) + perturb * ((std::rand() / double(RAND_MAX)) - 0.5);
+        points.emplace_back(x, y);
+    }
+}
+
+
+
+
 
 // Setting the min and max value to the first point in the list 
 double minX = points[0].xcord(); 
@@ -56,15 +65,11 @@ for (const auto & p : points) {
 double dx = maxX-minX; 
 double dy = maxY-minY; 
 
-double xc = dx / 2; 
-double yc = dy / 2; 
+double xc = minX + dx / 2; 
+double yc = minY + dy / 2; 
 
 // Chose the trinagle lenght to be the the max between dx,dy and multiply by 2
-double L = std::max(dx,dy); 
-
-std::cout<<"The coordinates of teh max and min points"<<std::endl; 
-std::cout<<"MaxX:"<<maxX <<";"<<"MinX:"<<minX<<std::endl; 
-std::cout<<"MaxY:"<<maxY <<";"<<"MinY:"<<minY<<std::endl; 
+double L = std::max(dx,dy);  
 
 // Create the super triangle to start the algorith. 
 
@@ -91,12 +96,11 @@ for (const auto & p : points) {
     // Iterate trough each triangle and check if the first point is within the circumcircle 
 
     for (const auto & tria : tria_list){
-
         if (tria.containedInCircumcircle(p)) {
             bad_tria_list.emplace_back(tria);
-
         }
     }
+
 
     // Create a polygon, whihc is a collection of edges
     std::vector<Edge2D> polygon; 
@@ -107,21 +111,64 @@ for (const auto & p : points) {
     // Iterate trough the bad triangle list and create a polygon made from the tringle edge not shared 
 
     for (const auto & t : bad_tria_list){
-
-        for (const auto & e: t.get_edges()) {
-
-            // check if an edge is not shared between bad triangles and if yes then add it to poligon
+        for (const auto & e : t.get_edges()) {
+            // If an edgne is shared between two trinagle the count is increased. If an edge is not shared then the 
+            // count will be one
             edge_count[e]++; 
-
         }
     }
 
-    
+    // Create the polygon with edges not shared between truangle (i.e count is one)
+
+    for (const auto [e,c] : edge_count){
+        if ( c ==1 ) { 
+            polygon.emplace_back(e); 
+        }
+    }
 
 
+    // remove the bad triangle from the list 
+    for (const auto & t_bad : bad_tria_list) {
+        auto t_it = std::find(tria_list.begin(), tria_list.end(), t_bad); 
+        if (t_it != tria_list.end()){
+            tria_list.erase(t_it); 
+        }
+    }
 
+    // once I creted the polygong I need to create trinagles with one edge which is the polygon edge
+    // and the other two triangle edge are those connecting the base to th epoint p
+
+    // create the new set of triangles
+
+    for (const auto & e : polygon) {
+        tria_list.emplace_back(e.p1(), e.p2(), p);
+    }
 
 }
+
+
+// this is for consistency, once the trinagulation is done I need to removw all trinagle with vertex 
+// connected to the super triangle I cerated at the beginning
+    tria_list.erase(
+    std::remove_if(tria_list.begin(), tria_list.end(),
+        [&](const Triangle & t){
+            return t.has_vertex(V1) || t.has_vertex(V2) || t.has_vertex(V3);
+        }),
+    tria_list.end());
+
+
+// Print the trinagle list on a file 
+std::ofstream file("./triangles.txt");
+for (const auto & t : tria_list){
+    file << t.V1().xcord() << " " << t.V1().ycord() << " "
+         << t.V2().xcord() << " " << t.V2().ycord() << " "
+         << t.V3().xcord() << " " << t.V3().ycord() << "\n";
+}
+file.close();
+
+
+
+
 
 }; 
 

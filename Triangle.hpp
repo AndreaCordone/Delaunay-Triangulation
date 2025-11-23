@@ -25,6 +25,19 @@ class Triangle {
     // Getter for triangles Edges
     const std::vector<Edge2D> & get_edges() const; 
 
+    // Getter for triangles vertices 
+    const Point2D & V1 () const; 
+    const Point2D & V2 () const; 
+    const Point2D & V3 () const; 
+    
+
+    // Check if a point is one of the vertices
+    bool has_vertex (const Point2D &) const; 
+
+    // compare operator 
+    bool operator==(const Triangle& other) const; 
+
+
     private:
         
     Point2D mA; 
