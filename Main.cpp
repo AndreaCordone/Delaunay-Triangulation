@@ -111,6 +111,8 @@ for (const auto & p : points) {
     // Iterate trough the bad triangle list and create a polygon made from the tringle edge not shared 
 
     for (const auto & t : bad_tria_list){
+
+        if (!t.isValid()) continue; 
         for (const auto & e : t.get_edges()) {
             // If an edgne is shared between two trinagle the count is increased. If an edge is not shared then the 
             // count will be one
