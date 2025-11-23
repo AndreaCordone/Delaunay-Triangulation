@@ -37,6 +37,9 @@ class Triangle {
     // compare operator 
     bool operator==(const Triangle& other) const; 
 
+    // Validity check used in case of degenerate triangles d = 0 in circumcircle formula (determinate = 0)
+    bool isValid () const {return mIsValid; }
+
 
     private:
         
@@ -51,6 +54,8 @@ class Triangle {
     double mCircRadious{}; 
 
 
+    // insert a bool member to invalidate trangle
+    bool mIsValid = true; 
 
 }; 
 

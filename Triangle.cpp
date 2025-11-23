@@ -20,12 +20,11 @@ void Triangle::computeCircCenter(){
     
     
     
-    // Compute a circumcurcle from a triangle, google for detail on the formula. 
+    // Compute a circumcircle from a triangle, google for detail on the formula. 
     double d = 2*(ax*(by-cy) + bx*(cy-ay) + cx*(ay-by));
     
     if (fabs(d) < 1e-12) { // degenerate
-        mCircRadious = INFINITY;
-        mCircCenter = Point2D(0,0);
+        mIsValid = false; 
         return;
     }
 
@@ -47,6 +46,7 @@ void Triangle::computeCircCenter(){
 
 bool Triangle::containedInCircumcircle ( const Point2D & p) const {
 
+    if (!mIsValid) return false; 
     double eps = 1e-12; 
     double dist2 = mCircCenter.distance_to_squared(p); 
     double rad2 = mCircRadious*mCircRadious; 
